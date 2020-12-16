@@ -5,6 +5,10 @@ class UsersRepository extends RESTDataSource {
   constructor(){
     super();
     this.baseURL = URL
+    this.response={
+      code: 200,
+      message: 'OK'
+    }
   }
 
   async getUsers(){
@@ -37,24 +41,33 @@ class UsersRepository extends RESTDataSource {
 
   async putUser(user){
     const roleId = (await this.get(`/roles?type=${user.role}`))[0].id
-    return this.put(
+    console.log(user.role);
+    const putData = await this.put(
       `users/${user.id}`,
       {
         ...user,
         role:roleId
       }
-    )
+    );
+    return this.responseUser(putData)
   }
 
   async deleteUser(id){
     await this.delete(`users/${id}`)
-    return id
+    return this.response
   }
 
   async mapUserRole(user){
     return {
       ...user,
       role: await this.getRoleById(user.role)
+    }
+  }
+
+  async responseUser(data){
+    return {
+      ...this.response,
+      user:data
     }
   }
 } 

@@ -47,7 +47,7 @@
       "nome": "Luciana",
       "ativo": true,
       "email": "l@l.l",
-      "role": 1
+      "role": 2
     },
     {
       "nome": "ale",
@@ -55,6 +55,14 @@
       "email": "l@l.l",
       "role": 2,
       "id": 8
+    },
+    {
+      "nome": "ale",
+      "ativo": true,
+      "email": "l@l.l",
+      "role": 2,
+      "createdAt": "2020-12-16T00:00:00.000Z",
+      "id": 9
     }
   ],
   "roles": [
