@@ -1,6 +1,8 @@
 const {ApolloServer}= require('apollo-server')
 const { mergeTypeDefs } = require('graphql-tools')
 
+const UserRepository = require('./user/datasources/user')
+
 const userResolvers = require('./user/resolvers/userResolvers')
 // const produtoResolvers = require('./produtos/resolvers/produtoResolvers')
 
@@ -16,6 +18,11 @@ const typeDefs = mergeTypeDefs([userSchema]);
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    dataSources: ()=>{
+      return {
+        usersAPI: new UserRepository()
+      }
+    },
     introspection: true,  
     playground: true,
 })
