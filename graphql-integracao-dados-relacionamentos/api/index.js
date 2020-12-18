@@ -1,37 +1,35 @@
-const { ApolloServer } = require('apollo-server')
-const { mergeTypeDefs } = require('graphql-tools')
-const path = require('path')
+const { ApolloServer } = require("apollo-server");
+const { mergeTypeDefs } = require("graphql-tools");
+const path = require("path");
 
-const userSchema = require('./user/schema/user.graphql')
-const userResolvers = require('./user/resolvers/userResolvers')
-const UsersAPI = require('./user/datasource/user')
+const { userSchema, userResolvers, UsersAPI } = require("./user");
 
-const turmaSchema = require('./turma/schema/turma.graphql')
-const turmaResolvers = require('./turma/resolvers/turmaResolvers.js')
-const TurmasAPI = require('./turma/datasource/turma.js')
+const { turmaSchema, turmaResolvers, TurmasAPI } = require("./turma");
+const { matriculaSchema, matriculaResolvers, MatriculasAPI } = require("./matricula");
 
 const dbConfig = {
-  client:'sqlite',
-  useNullAsDefault:true,
-  connection:{
-    filename: path.resolve(__dirname,'./data/database.db')
-  }
-}
+  client: "sqlite",
+  useNullAsDefault: true,
+  connection: {
+    filename: path.resolve(__dirname, "./data/database.db"),
+  },
+};
 
-const typeDefs = mergeTypeDefs([userSchema,turmaSchema])
-const resolvers = [userResolvers,turmaResolvers]
+const typeDefs = mergeTypeDefs([userSchema, turmaSchema, matriculaSchema]);
+const resolvers = [userResolvers, turmaResolvers, matriculaResolvers];
 
-const server = new ApolloServer( { 
+const server = new ApolloServer({
   typeDefs,
   resolvers,
   dataSources: () => {
     return {
       usersAPI: new UsersAPI(),
       turmasAPI: new TurmasAPI(dbConfig),
-    }
+      matriculasAPI: new MatriculasAPI(dbConfig),
+    };
   },
- })
+});
 
-server.listen().then(({url}) => {
-  console.log(`Servidor rodando na porta ${url}`)
-})
+server.listen().then(({ url }) => {
+  console.log(`Servidor rodando na porta ${url}`);
+});
