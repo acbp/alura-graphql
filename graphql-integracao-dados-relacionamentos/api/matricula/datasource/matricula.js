@@ -1,4 +1,5 @@
 const { SQLDataSource } = require("datasource-sql");
+const DataLoader = require('dataloader');
 
 class MatriculasAPI extends SQLDataSource {
   constructor(dbConfig) {
@@ -7,9 +8,11 @@ class MatriculasAPI extends SQLDataSource {
     this.Resposta = {
       mensagem: "",
     };
-  }
 
-  async matricularEstudante(ids) {
+  }
+  matriculasPorEstudanteLoader = new DataLoader(this.getMatriculasPorEstudante.bind(this))
+
+  async matricularEstudante(ids) {  
     const novaMatricula = {
       estudante_id: ids.estudante,
       turma_id: ids.turma,
@@ -28,11 +31,14 @@ class MatriculasAPI extends SQLDataSource {
     return matriculas;
   }
 
-  async getMatriculasPorEstudante(id) {
-    const matriculas = await this.db.select("*").from("matriculas").where({
-      estudante_id: Number(id),
-    });
-    return matriculas;
+
+  async getMatriculasPorEstudante(ids) {
+    const matriculas = await this.db
+      .select("*")
+      .from("matriculas")
+      .whereIn('estudante_id',ids)
+      .select();
+    return ids.map( id => matriculas.filter( m => m.estudante_id === id));
   }
 
   async getMatriculas() {
@@ -73,13 +79,13 @@ class MatriculasAPI extends SQLDataSource {
     this.Resposta.mensagem = "registro deletado";
     return this.Resposta;
   }
-  
+
   async cancelarMatricula(idMatricula) {
     await this.db
       .update({ status: "cancelado" })
       .where({ id: Number(idMatricula) })
       .into('matriculas')
- 
+
     this.Resposta.mensagem = "matrícula cancelada"
     return this.Resposta
   }
