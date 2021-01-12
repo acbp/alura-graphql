@@ -1,5 +1,10 @@
 const { GraphQLScalarType } = require('graphql')
 const turmaResolvers = {
+  Response: {
+    __resolveType(obj, context, info) { 
+      return false
+    },
+  },
   DateTime: new GraphQLScalarType(
     {
       name: 'DateTime',

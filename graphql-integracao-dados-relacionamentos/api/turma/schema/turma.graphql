@@ -1,5 +1,5 @@
 const { gql } = require('apollo-server')
-const turmaSchema = gql `
+module.exports = gql `
     scalar DateTime
 
     input TurmaInput {
@@ -31,14 +31,12 @@ const turmaSchema = gql `
         atualizaTurma(id: ID!, turma: TurmaInput): Turma!
         deletaTurma(id: ID!): RespostaPadrao!
     }
-    interface Resposta {
+    interface Response {
         mensagem: String!
     }
 
-    type RespostaPadrao implements Resposta {
+    type RespostaPadrao implements Response {
         mensagem: String!
     }
 
 `
-
-module.exports = turmaSchema

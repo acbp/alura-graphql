@@ -1,5 +1,5 @@
 const { gql } = require('apollo-server')
-const matriculaSchema = gql `
+module.exports = gql `
     scalar DateTime
 
     type Matricula {
@@ -16,4 +16,3 @@ const matriculaSchema = gql `
         cancelarMatricula (matricula: ID!): RespostaPadrao!
     }
 `
-module.exports = matriculaSchema

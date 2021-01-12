@@ -6,7 +6,7 @@ const userResolvers = {
     DOCENTE: "DOCENTE",
     COORDENACAO: "COORDENACAO"
   },
-  respostaCustom: {
+  customReponse: {
     __resolveType(obj, context, info) { 
       return false
     },
