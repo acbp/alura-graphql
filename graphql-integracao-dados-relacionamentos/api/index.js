@@ -2,11 +2,6 @@ const { ApolloServer } = require("apollo-server");
 const { mergeTypeDefs } = require("graphql-tools");
 const path = require("path");
 
-const { userSchema, userResolvers, UsersAPI } = require("./user");
-
-const { turmaSchema, turmaResolvers, TurmasAPI } = require("./turma");
-const { matriculaSchema, matriculaResolvers, MatriculasAPI } = require("./matricula");
-
 const dbConfig = {
   client: "sqlite",
   useNullAsDefault: true,
@@ -15,20 +10,19 @@ const dbConfig = {
   },
 };
 
-const typeDefs = mergeTypeDefs([userSchema, turmaSchema, matriculaSchema]);
-const resolvers = [userResolvers, turmaResolvers, matriculaResolvers];
+const serverConfig = {
+  schemas:[],
+  resolvers:[],
+  api:{},
+  sql:dbConfig,
+  dataSources: ()=> serverConfig.api
+}
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  dataSources: () => {
-    return {
-      usersAPI: new UsersAPI(),
-      turmasAPI: new TurmasAPI(dbConfig),
-      matriculasAPI: new MatriculasAPI(dbConfig),
-    };
-  },
-});
+require("./loader")(serverConfig);
+
+serverConfig.typeDefs = mergeTypeDefs(serverConfig.schemas);
+
+const server = new ApolloServer(serverConfig);
 
 server.listen().then(({ url }) => {
   console.log(`Servidor rodando na porta ${url}`);

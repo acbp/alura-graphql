@@ -1,10 +1,9 @@
-const userSchema = require('./schema/user.graphql')
-const userResolvers = require('./resolvers/userResolvers')
-const UsersAPI = require('./datasource/user')
+const schema = require('./schema/user.graphql')
+const resolvers = require('./resolvers/userResolvers')
+const API = require('./datasource/user')
 
-module.exports = {
-    userSchema,
-    userResolvers,
-    UsersAPI,
+module.exports = config => {
+    config.schemas.push(schema)
+    config.resolvers.push(resolvers)
+    config.api = {...config.api, usersAPI:new API() }
 }
-
